@@ -2,19 +2,28 @@ import pytest
 from main import get_random_cat_image
 
 def test_get_random_cat_image_success(mocker):
-
+    """
+    Тест успешного запроса к TheCatAPI.
+    """
+    # Мокаем requests.get
     mock_get = mocker.patch('main.requests.get')
     mock_get.return_value.status_code = 200
     mock_get.return_value.json.return_value = [
         {"id": "abc123", "url": "https://cdn2.thecatapi.com/images/abc123.jpg"}
     ]
 
+    # Проверяем, что функция возвращает правильный URL
     result = get_random_cat_image()
     assert result == "https://cdn2.thecatapi.com/images/abc123.jpg"
 
 def test_get_random_cat_image_failure(mocker):
+    """
+    Тест неуспешного запроса к TheCatAPI.
+    """
+    # Мокаем requests.get
     mock_get = mocker.patch('main.requests.get')
     mock_get.return_value.status_code = 404
 
+    # Проверяем, что функция возвращает None при неуспешном запросе
     result = get_random_cat_image()
     assert result is None
